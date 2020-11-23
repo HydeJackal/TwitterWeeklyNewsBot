@@ -13,10 +13,15 @@ class NewsAPI:
         last_week = today - delta
         begin_date = last_week.strftime('%Y%m%d')
         url = 'https://api.nytimes.com/svc/search/v2/articlesearch.json?q=' + topic + '&begin_date=' + begin_date + '&sort=best&type_of_material=Article&api-key=' + self.nyt_access
-        json_url = urllib.request.urlopen(url)
-        articles = json.loads(json_url.read())
+        try:
+            json_url = urllib.request.urlopen(url)
+            articles = json.loads(json_url.read())
+        except:
+            raise RuntimeError('Failed to retrive New York Times data.')
         if articles['status'] == 'OK':
-            print(articles['response']['docs'][0])
+            return articles['response']['docs'][0:4], articles['response']['meta']['hits']
+        else:
+            raise RuntimeError('Failed to find any New York Times articles with query.')
 
 api = NewsAPI(credentials.NYT_API)
 date_time_obj = datetime.now()
