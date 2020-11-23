@@ -39,6 +39,11 @@ def reply_digest(api):
                 url_articles = news_api.get_nyt_last_week_articles(important_text, date_time_obj)
             except RuntimeError as e:
                 msg = e
+                status = api.send_message('@' + mention.user.screen_name + 
+                ' Hello there, there was an error with pulling out the news. \n' + msg, mention.id)
+                api.set_last_mention(status.id)
+                return
+                
 
             status = api.send_message('@' + mention.user.screen_name + 
             ' Hello there, here are some trending news from the New York Times last week in the subject(s) you specified. #inthisweek', mention.id)

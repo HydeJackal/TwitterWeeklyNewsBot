@@ -19,7 +19,12 @@ class NewsAPI:
         except:
             raise RuntimeError('Failed to retrive New York Times data.')
         if articles['status'] == 'OK':
-            return articles['response']['docs'][0:4], articles['response']['meta']['hits']
+            try:
+                num_of_articles = articles['response']['docs'].length()
+                if num_of_articles > 5:
+                    return articles['response']['docs'][0:4], articles['response']['meta']['hits']
+                else:
+                    return articles['response']['docs'][0:num_of_articles - 1], articles['response']['meta']['hits']
         else:
             raise RuntimeError('Failed to find any New York Times articles with query.')
 
